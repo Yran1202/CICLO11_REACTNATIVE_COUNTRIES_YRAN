@@ -2,17 +2,18 @@ import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
 import {
   StyleSheet,
-  Text,
   View,
-  Image,
   Pressable,
-  ScrollView,
   SafeAreaView,
   ActivityIndicator,
   FlatList,
 } from "react-native";
 import { getCountriesByRegion } from "../lib/restcountries.js";
-import { CountryCard } from "./CountryCard.jsx";
+import { AnimatedCountryCard, CountryCard } from "./CountryCard.jsx";
+import { Link } from "expo-router";
+import { InfoIcon } from "./Icons.jsx";
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { Logo } from "./Logo.jsx";
 
 export default function Main() {
   const [countries, setCountries] = useState([]);
@@ -20,30 +21,28 @@ export default function Main() {
   useEffect(() => {
     getCountriesByRegion().then((data) => {
       setCountries(data);
-
     });
   }, []);
 
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
+      <Logo />
+
       <SafeAreaView>
         {countries.length === 0 ? (
-          <ActivityIndicator size={'large'} />
+          <ActivityIndicator size={"large"} />
         ) : (
           <FlatList
             data={countries}
             keyExtractor={(item) => item.name.common}
             renderItem={({ item }) => (
-              <CountryCard
+              <AnimatedCountryCard
                 country={item}
-                onPress={() => console.log("Pais --- " + item.name.common)}
+                index={countries.indexOf(item)}
               />
             )}
-          
           />
-            
-           
         )}
       </SafeAreaView>
     </View>
@@ -95,5 +94,9 @@ const styles = StyleSheet.create({
     width: 200,
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  button_navegacion: {
+    color: "blue",
   },
 });
